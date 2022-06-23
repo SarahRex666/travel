@@ -24,16 +24,20 @@ ActiveRecord::Schema.define(version: 2022_06_21_161513) do
   end
 
   create_table "locations", force: :cascade do |t|
+    t.integer "tour_id"
+    t.integer "guide_id"
     t.string "name"
     t.string "description"
-    t.integer "guide_id"
-    t.integer "tour_id"
+    t.index ["guide_id"], name: "index_locations_on_guide_id"
+    t.index ["tour_id"], name: "index_locations_on_tour_id"
   end
 
   create_table "reviews", force: :cascade do |t|
+    t.integer "tours_id"
     t.string "username"
     t.string "review"
     t.integer "rating"
+    t.index ["tours_id"], name: "index_reviews_on_tours_id"
   end
 
   create_table "tours", force: :cascade do |t|
@@ -42,7 +46,9 @@ ActiveRecord::Schema.define(version: 2022_06_21_161513) do
     t.integer "days"
     t.string "tags"
     t.integer "price"
-    t.integer "addon_id"
   end
 
+  add_foreign_key "locations", "guides"
+  add_foreign_key "locations", "tours"
+  add_foreign_key "reviews", "tours", column: "tours_id"
 end
